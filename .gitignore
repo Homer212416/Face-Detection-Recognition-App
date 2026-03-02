@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Data (large binary files – commit only structure)
+data/raw/
+data/processed/
+data/splits/
+
+# Models
+models/*.keras
+models/*.h5
+
+# Notebooks checkpoints
+notebooks/.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+CLAUDE.md
