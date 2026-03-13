@@ -18,7 +18,7 @@ def parse_args():
     parser.add_argument('--person', type=str, required=True)
     parser.add_argument('--count', type=int, default=50)
     parser.add_argument('--camera', type=int, default=0)
-    parser.add_argument('--auto-interval', type=float, default=0.5)
+    parser.add_argument('--interval', type=float, default=0.5)
 
     return parser.parse_args()
 
@@ -28,35 +28,61 @@ def main():
     # ---------------------------- set up before the capture loop -------------------------------
 
     args = parse_args()
-    path = os.path.join('data', 'raw', args.person)
-    os.makedirs(path, exist_ok=True)
+    directory_path = os.path.join('data', 'raw', args.person)
+    os.makedirs(directory_path, exist_ok=True)
 
     # to locate the idx to start with
-    img_index = len(os.listdir(path))
+    img_index = len(os.listdir(directory_path))
 
     # open the webcam
-    cap = cv2.VideoCapture(args.camera)
-    if not cap.isOpened(): 
-        raise RuntimeError(f'Camera index was {args.camera} tried, but failed.')
+    camera = cv2.VideoCapture(args.camera)
+    if not camera.isOpened(): 
+        raise RuntimeError(f'Camera {args.camera} was tried, but failed.')
 
-    # load Haar Cascade detector
+    # load Haar Cascade detector, it is used to make the rectangle on display
     detector = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     
-    
-
-    # state variables for the loop
-    auto_mode = False
-    should_capture = False
-    last_capture_time = time.time()
+    # the timer that drives auto-capture — every time the elapsed time since           
+    # last_capture_time exceeds auto_interval, a frame is saved and last_capture_time 
+    # is reset to time.time() to start the next interval.
+    last_capture_time = time.time() 
 
     # ---------------------------------- capture loop --------------------------------------------
     while img_index < args.count:
-        ret, frame = cap.read()
+        ret, frame = camera.read() # take a picture
         if not ret:
             break
         else:
-            display = frame.copy() # this is to display to the programmers, the picture with rectangles
-            frame = cv2.cvtColor(frame, cv2.COLOR)
+            display = frame.copy() # this is to display to the users, the pictures with rectangles
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            # only one face in our image; -> left-up coordinates (x,y) and width, height
+            x,y,w,h = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)[0] 
+            cv2.rectangle(display, (x,y), (x+w, y+h), (0,255,0), 3)
+            # HUD
+            cv2.putText(display, f"{args.person}  {img_index}/{args.count}")
+            # show
+            cv2.imshow("Capture", display)
+            cv2.waitkey(1) # waitKey is equivalent to flush here
+            # auto-capture timing
+            while (time.time() - last_capture_time) < args.interval: # spin wait
+                pass    
+            last_capture_time = time.time()
+            # store the frame
+            file_name = f'{args.person}_{img_index:04d}.jpg'
+            file_path = os.path.join(directory_path,file_name)
+            cv2.imwrite(file_path, frame)
+            img_index += 1
+    camera.release()
+    cv2.destroyAllWindows
+
+            
+
+
+            
+
+
+            
+            
 
 
 
