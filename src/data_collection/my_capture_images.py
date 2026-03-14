@@ -59,9 +59,10 @@ def main():
             faces = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
             if len(faces) == 0: continue
             x,y,w,h = faces[0] 
-            cv2.rectangle(display, (x,y), (x+w, y+h), (0,255,0), 3)
+            border_thickness = 3
+            cv2.rectangle(display, (x,y), (x+w, y+h), (0,255,0), border_thickness)
             # HUD
-            cv2.putText(display, f"{args.person}  {img_index}/{args.count}")
+            cv2.putText(display, f"{args.person}  {img_index}/{args.count}", (x+w/2,y-border_thickness), color=(0,255,0),thickness=border_thickness)
             # show
             cv2.imshow("Capture", display)
             cv2.waitkey(1) # waitKey is equivalent to flush here
