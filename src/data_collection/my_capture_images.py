@@ -62,7 +62,7 @@ def main():
             border_thickness = 3
             cv2.rectangle(display, (x,y), (x+w, y+h), (0,255,0), border_thickness)
             # HUD
-            cv2.putText(display, f"{args.person}  {img_index}/{args.count}", (x+w/2,y-border_thickness), color=(0,255,0),thickness=border_thickness)
+            cv2.putText(display, f"{args.person}  {img_index}/{args.count}", (x+w/2,y-border_thickness), fontFace=cv2.FONT_HERSHEY_SIMPLEX, color=(0,255,0),thickness=border_thickness)
             # show
             cv2.imshow("Capture", display)
             cv2.waitkey(1) # waitKey is equivalent to flush here
