@@ -51,7 +51,7 @@ def main():
     while img_index < args.count:
         ret, frame = camera.read() # take a picture
         if not ret:
-            break
+            continue
         else:
             display = frame.copy() # this is to display to the users, the pictures with rectangles
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
