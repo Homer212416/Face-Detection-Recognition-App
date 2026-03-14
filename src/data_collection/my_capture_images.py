@@ -65,7 +65,7 @@ def main():
             cv2.putText(display, f"{args.person}  {img_index}/{args.count}", (x+w//2,y-border_thickness), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1.0,color=(0,255,0),thickness=border_thickness)
             # show
             cv2.imshow("Capture", display)
-            cv2.waitkey(1) # waitKey is equivalent to flush here
+            cv2.waitKey(1) # waitKey is equivalent to flush here
             # auto-capture timing, it stores one frame when time lapses
             if (time.time() - last_capture_time) >= args.interval: 
                 last_capture_time = time.time()
