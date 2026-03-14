@@ -6,7 +6,7 @@ import time
 """
 always to run the script at the project root directory !!!
 ```bash
-python src/data_collection/capture_images.py --person "Alice" --count 50
+python src/data_collection/my_capture_images.py --person "Alice" --count 50
 ```
 """
 
@@ -66,7 +66,7 @@ def main():
             # show
             cv2.imshow("Capture", display)
             cv2.waitKey(1) # waitKey is equivalent to flush here
-            # auto-capture timing, it stores one frame when time lapses
+            # auto-capture timing, it stores one frame when enough time lapses
             if (time.time() - last_capture_time) >= args.interval: 
                 last_capture_time = time.time()
                 # store the frame
@@ -76,16 +76,6 @@ def main():
                 img_index += 1
     camera.release()
     cv2.destroyAllWindows()
-
-            
-
-
-            
-
-
-            
-            
-
 
 
 if __name__ == "__main__":
