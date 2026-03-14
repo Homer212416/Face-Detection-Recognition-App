@@ -56,24 +56,25 @@ def main():
             display = frame.copy() # this is to display to the users, the pictures with rectangles
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             # only one face in our image; -> left-up coordinates (x,y) and width, height
-            x,y,w,h = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)[0] 
+            faces = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+            if len(faces) == 0: continue
+            x,y,w,h = faces[0] 
             cv2.rectangle(display, (x,y), (x+w, y+h), (0,255,0), 3)
             # HUD
             cv2.putText(display, f"{args.person}  {img_index}/{args.count}")
             # show
             cv2.imshow("Capture", display)
             cv2.waitkey(1) # waitKey is equivalent to flush here
-            # auto-capture timing
-            while (time.time() - last_capture_time) < args.interval: # spin wait
-                pass    
-            last_capture_time = time.time()
-            # store the frame
-            file_name = f'{args.person}_{img_index:04d}.jpg'
-            file_path = os.path.join(directory_path,file_name)
-            cv2.imwrite(file_path, frame)
-            img_index += 1
+            # auto-capture timing, it stores one frame when time lapses
+            if (time.time() - last_capture_time) >= args.interval: 
+                last_capture_time = time.time()
+                # store the frame
+                file_name = f'{args.person}_{img_index:04d}.jpg'
+                file_path = os.path.join(directory_path,file_name)
+                cv2.imwrite(file_path, frame)
+                img_index += 1
     camera.release()
-    cv2.destroyAllWindows
+    cv2.destroyAllWindows()
 
             
 
