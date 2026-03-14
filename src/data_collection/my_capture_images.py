@@ -48,9 +48,13 @@ def main():
     last_capture_time = time.time() 
 
     # ---------------------------------- capture loop --------------------------------------------
+    camera_failure_count = 0
     while img_index < args.count:
         ret, frame = camera.read() # take a picture
+        
         if not ret:
+            camera_failure_count += 1
+            if camera_failure_count > 5: break # could be hardware or os problem
             continue
         else:
             display = frame.copy() # this is to display to the users, the pictures with rectangles
