@@ -101,11 +101,22 @@ End the function by returning `parser.parse_args()`. argparse reads `sys.argv` a
 python src/preprocessing/preprocess.py
 ```
 
-> **Warning:** Do not run this script a second time without first clearing `data/processed/` and `data/splits/`. Augmented copies from a previous run will be augmented again, causing data leakage and duplicates.
+The script automatically clears `data/processed/` and `data/splits/` before running, so it is safe to re-run at any time.
 
 ### File structure
 
-Write three functions — `step1_crop_all()`, `step2_split()`, and `step3_augment_train()` — then call them in order from an `if __name__ == "__main__"` block. Put these imports and constants at the top of the file before any function definition:
+Write three functions — `step1_crop_all()`, `step2_split()`, and `step3_augment_train()` — then call them in order from an `if __name__ == "__main__"` block. Before calling the three steps, clear both output directories so that stale files from a previous run cannot mix with the current output:
+
+```python
+if __name__ == "__main__":
+    for directory in [PROCESSED_DIR, SPLITS_DIR]:
+        if os.path.exists(directory):
+            shutil.rmtree(directory)
+        os.makedirs(directory)
+    step1_crop_all()
+    step2_split()
+    step3_augment_train()
+``` Put these imports and constants at the top of the file before any function definition:
 
 ```python
 import cv2
