@@ -19,6 +19,13 @@ deep enough to learn discriminative facial features.
 from tensorflow import keras
 from tensorflow.keras import layers
 
+"""Input
+→ [Conv→BN→ReLU → Conv→BN→ReLU → MaxPool] * 3
+→ [Conv→BN→ReLU → Conv→BN→ReLU]
+→ GlobalAveragePooling2D
+→ Dense(256, ReLU)
+→ Dropout(0.4)
+→ Dense(N_CLASSES, Softmax)"""
 
 def build_model(n_classes: int, img_size: int = 128, dropout_rate: float = 0.4) -> keras.Model:
     """
@@ -38,12 +45,18 @@ def build_model(n_classes: int, img_size: int = 128, dropout_rate: float = 0.4) 
     keras.Model
         Compiled model ready for .fit().
     """
+
+    if n_classes < 2:
+        raise ValueError("n_classes must be at least 2 for multi-class classification.")
+    
     inputs = keras.Input(shape=(img_size, img_size, 3), name="input_image")
 
     # ── Block 1 ──────────────────────────────────────────────────────────────
     x = layers.Conv2D(32, 3, padding="same", use_bias=False, name="conv1_1")(inputs)
     x = layers.BatchNormalization(name="bn1_1")(x)
-    x = layers.Activation("relu")(x)
+    x = layers.Activation("relu")(x)    
+    # x = layers.ReLU(name="relu1_1")(x)
+    # x = layers.Activation("relu", name="relu1_1")(x)
     x = layers.Conv2D(32, 3, padding="same", use_bias=False, name="conv1_2")(x)
     x = layers.BatchNormalization(name="bn1_2")(x)
     x = layers.Activation("relu")(x)
