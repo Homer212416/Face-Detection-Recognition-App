@@ -27,7 +27,8 @@ from tensorflow.keras import layers
 → Dropout(0.4)
 → Dense(N_CLASSES, Softmax)"""
 
-def build_model(n_classes: int, img_size: int = 128, dropout_rate: float = 0.4) -> keras.Model:
+# def build_model(n_classes: int, img_size: int = 128, dropout_rate: float = 0.4) -> keras.Model:
+def build_model(n_classes: int, img_size: int = 128, dropout_rate: float = 0.4, lr: float = 1e-3) -> keras.Model:
     """
     Build and return a compiled Keras face-recognition CNN.
 
@@ -96,10 +97,16 @@ def build_model(n_classes: int, img_size: int = 128, dropout_rate: float = 0.4) 
 
     model = keras.Model(inputs, outputs, name="FaceRecognitionCNN")
 
+    # model.compile(
+    #     optimizer=keras.optimizers.Adam(learning_rate=1e-3),
+    #     loss="categorical_crossentropy",
+    #     metrics=["accuracy"],
+    # )
+
     model.compile(
-        optimizer=keras.optimizers.Adam(learning_rate=1e-3),
-        loss="categorical_crossentropy",
-        metrics=["accuracy"],
+    optimizer=keras.optimizers.Adam(learning_rate=lr),
+    loss="categorical_crossentropy",
+    metrics=["accuracy"],
     )
     return model
 
