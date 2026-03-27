@@ -157,7 +157,7 @@ SPLITS_DIR     = "data/splits"
 
 **Saving as PNG.** Use `Path(fname).stem` from the `pathlib` module — look up `Path.stem` in the **Python 3 `pathlib` documentation** — to strip the original file extension, then append `.png`. Write the resized image with `cv2.imwrite(out_path, resized)`. PNG is lossless, so repeated reads and writes will not degrade image quality the way JPEG recompression would.
 
----
+--- <!--here 0327 16:36-->
 
 ### `step2_split()` — divide images into train, val, and test sets
 

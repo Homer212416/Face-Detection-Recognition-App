@@ -19,27 +19,43 @@ SPLITS_DIR = "data/splits"
 
 def step1_crop_all():
     haar_cascade  = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-    raw_folder_ls = os.listdir(RAW_DIR)
+    person_folder_names = os.listdir(RAW_DIR)
+    # For each person, build the raw input path and the processed output path
+    for p in person_folder_names:
+        raw_input_path = os.path.join(RAW_DIR, p)
+        processed_output_path = os.path.join(PROCESSED_DIR, p)
+        os.makedirs(processed_output_path, exist_ok=True)
+        # For each image of a person
+        for i in os.listdir(raw_input_path):
+            # read
+            img = cv2.imread(os.path.join(raw_input_path,i))
+            if img is None:
+                continue
+            # grey scale
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            # detect and crop
+            boxes = haar_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+            if len(boxes) > 0:
+                box = boxes[0]
+                x, y, w, h = box
+                padding = int(0.20 * max(w,h))
+                y1 = max(0, y-padding)
+                x1 = max(0, x-padding)
+                y2 = min(y+h+padding, img.shape[0])
+                x2 = min(x+w+padding, img.shape[1])
+                crop = img[y1:y2, x1:x2]
+            else:
+                crop = img
+            # save
+            resized = cv2.resize(crop, (IMG_SIZE, IMG_SIZE))
+            stem = Path(i).stem
+            out_path = os.path.join(processed_output_path, stem + ".png")
+            cv2.imwrite(out_path, resized)
 
-    ls_size = len(raw_folder_ls)
 
-    raw_input_path_ls = []
-    processed_output_path_ls = []
-    
-    for i in range(ls_size):
-        raw_input_path = os.path.join(RAW_DIR, raw_folder_ls[i])
-        processed_output_path = os.path.join(PROCESSED_DIR, raw_folder_ls[i])
-        raw_input_path_ls.append(raw_input_path)
-        processed_output_path_ls.append(processed_output_path)
-    
-    
-        
+# def step2_split(): <-- TODO
 
-
-
-def step2_split():
-
-def step3_augment_train():
+# def step3_augment_train():
 
 
 if __name__ == "__main__":
