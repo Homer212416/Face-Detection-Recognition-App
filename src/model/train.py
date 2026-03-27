@@ -112,15 +112,24 @@ def main():
     save_label_map(train_gen.class_indices, label_map_path)
 
     print("[INFO] Building model …")
-    model = build_model(n_classes=n_classes, img_size=args.img_size)
+    # model = build_model(n_classes=n_classes, img_size=args.img_size)
+
+    # support change lr
+    # python src/model/train.py --lr 0.001
+    # python src/model/train.py --lr 0.0005
+    # python src/model/train.py --lr 0.0001
+
+    model = build_model(n_classes=n_classes, img_size=args.img_size, lr=args.lr)
     model.summary()
 
     # ── Callbacks ─────────────────────────────────────────────────────────────
     checkpoint_path = os.path.join(MODELS_DIR, "face_recognition_model.keras")
+    # When val_loss stops decreasing → automatically reduce lr
     callbacks = [
         keras.callbacks.ModelCheckpoint(
             filepath=checkpoint_path,
             monitor="val_accuracy",
+            mode="max",
             save_best_only=True,
             verbose=1,
         ),
@@ -133,6 +142,7 @@ def main():
         ),
         keras.callbacks.EarlyStopping(
             monitor="val_accuracy",
+            mode="max",
             patience=10,
             restore_best_weights=True,
             verbose=1,
