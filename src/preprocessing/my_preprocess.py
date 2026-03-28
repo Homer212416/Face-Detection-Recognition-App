@@ -54,7 +54,7 @@ def step1_crop_all():
 
 
 def step2_split(): # <-- TODO
-
+    
 
 # def step3_augment_train():
 
