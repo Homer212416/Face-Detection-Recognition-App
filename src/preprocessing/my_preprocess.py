@@ -53,7 +53,8 @@ def step1_crop_all():
             cv2.imwrite(out_path, resized)
 
 
-# def step2_split(): <-- TODO
+def step2_split(): # <-- TODO
+
 
 # def step3_augment_train():
 
