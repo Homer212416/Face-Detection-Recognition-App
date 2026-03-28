@@ -54,7 +54,17 @@ def step1_crop_all():
 
 
 def step2_split(): # <-- TODO
-    
+    # wipe
+    shutil.rmtree(SPLITS_DIR)
+    os.makedirs(SPLITS_DIR)
+    # shuffle
+    # for each person
+    for p in os.listdir(PROCESSED_DIR):
+        files = os.listdir(os.path.join(PROCESSED_DIR, p))
+        random.seed(RANDOM_SEED)
+        random.shuffle(files)
+        
+
 
 # def step3_augment_train():
 
