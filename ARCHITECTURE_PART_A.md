@@ -165,7 +165,7 @@ SPLITS_DIR     = "data/splits"
 
 **Wiping the previous splits.** Delete the entire `data/splits/` directory with `shutil.rmtree` — look up `shutil.rmtree` in the **Python 3 `shutil` documentation** — then recreate the empty folder tree with `os.makedirs`. Do this once at the start of the function, before the per-person loop. Without this step, images from a previous run remain in the split folders and mix with the current ones, contaminating the dataset.
 
-**Shuffling with a fixed seed.** After listing each person's `.png` files with `os.listdir`, call `random.seed(RANDOM_SEED)` and then `random.shuffle(files)` — look up both in the **Python 3 `random` module documentation**. Always place `random.seed` immediately before `random.shuffle`, not once at module load. Other code paths may call random functions in between runs and change the generator's internal state; re-seeding just before the shuffle guarantees every run on every machine produces exactly the same file ordering and therefore the same split.
+**Shuffling with a fixed seed.** Call `random.seed(RANDOM_SEED)` once before the per-person loop, then call `random.shuffle(files)` inside the loop for each person — look up both in the **Python 3 `random` module documentation**. Seeding once before the loop means the random generator's state advances naturally after each person's shuffle, so each person receives a genuinely different file ordering. This is the standard pattern in ML/AI (e.g. scikit-learn's `random_state`): one seed guarantees the entire run is reproducible while still giving each class an independent shuffle.
 
 **Computing split boundaries.** Calculate `n_train = int(len(files) * TRAIN_RATIO)` for the number of training images and `n_val = int(len(files) * VAL_RATIO)` for validation. Use Python list slicing to build three sub-lists — look up **list slicing** in the Python tutorial if the `list[start:end]` notation is unfamiliar. The training slice runs from the beginning to `n_train`; the validation slice runs from `n_train` to `n_train + n_val`; the test slice runs from `n_train + n_val` to the end with no upper bound needed.
 
@@ -217,7 +217,7 @@ data/
 
 | Mistake | Why it matters |
 |---|---|
-| Not calling `random.seed` immediately before `random.shuffle` | Other code may change the random state between runs, producing a different split each time |
+| Calling `random.seed` inside the per-person loop | Every person gets the same shuffle pattern; seed once before the loop so each person gets a genuinely different ordering |
 | Using `shutil.move` instead of `shutil.copy` | Files disappear from `data/processed/`; the splits cannot be regenerated without redoing step 1 |
 | Swapping x and y when slicing the NumPy array | NumPy indexing is `[row, col]` = `[y, x]`; writing `img[x1:x2, y1:y2]` crops the wrong region |
 | Not clamping the padded coordinates to image bounds | Negative indices wrap around in NumPy; out-of-range indices silently produce empty crops |

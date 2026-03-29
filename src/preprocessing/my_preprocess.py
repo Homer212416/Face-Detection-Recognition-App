@@ -5,13 +5,16 @@ import random
 from pathlib import Path
 from PIL import Image, ImageEnhance
 
-
-IMG_SIZE = 128
+# path
 TRAIN_RATIO = 0.70
 VAL_RATIO = 0.15
-AUGMENT_FACTOR = 4
 RANDOM_SEED = 42
 
+# path
+IMG_SIZE = 128
+AUGMENT_FACTOR = 4
+
+# path
 RAW_DIR = "data/raw"
 PROCESSED_DIR = "data/processed"
 SPLITS_DIR = "data/splits"
@@ -54,15 +57,31 @@ def step1_crop_all():
 
 
 def step2_split(): # <-- TODO
+    
     # wipe
+    
     shutil.rmtree(SPLITS_DIR)
     os.makedirs(SPLITS_DIR)
+    
     # shuffle
     # for each person
+    
+    random.seed(RANDOM_SEED)
     for p in os.listdir(PROCESSED_DIR):
         files = os.listdir(os.path.join(PROCESSED_DIR, p))
-        random.seed(RANDOM_SEED)
         random.shuffle(files)
+
+        n_train = int(len(files) * TRAIN_RATIO)
+        n_val = int(len(files) * VAL_RATIO)
+
+        train_files = files[:n_train]
+        val_files = files[n_train : n_train + n_val]
+        test_files = files[n_train + n_val :]
+
+
+
+
+
         
 
 
