@@ -56,7 +56,7 @@ def step1_crop_all():
             cv2.imwrite(out_path, resized)
 
 
-def step2_split(): # <-- TODO
+def step2_split(): 
     
     # wipe
     
@@ -78,14 +78,17 @@ def step2_split(): # <-- TODO
         val_files = files[n_train : n_train + n_val]
         test_files = files[n_train + n_val :]
 
+        for pair in zip(["train", "val", "test"], [train_files, val_files, test_files]):
+            dst_dir = os.path.join(SPLITS_DIR, pair[0],p)
+            os.makedirs(dst_dir, exist_ok=True)
+            for file in pair[1]:
+                src = os.path.join(PROCESSED_DIR, p, file)
+                shutil.copy(src, dst_dir)
 
 
+def step3_augment_train():
 
-
-        
-
-
-# def step3_augment_train():
+    
 
 
 if __name__ == "__main__":
@@ -94,7 +97,7 @@ if __name__ == "__main__":
             shutil.rmtree(directory) # clear the data if they already exist
         os.makedirs(directory)
     step1_crop_all()
-    #step2_split()
+    step2_split()
     #step3_augment_train()
 
 

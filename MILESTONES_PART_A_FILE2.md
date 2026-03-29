@@ -36,7 +36,7 @@ Still inside the per-person `for p` loop, after `random.shuffle(files)`:
 
 ## Milestone 2 — 14:30 → 15:00 · Smoke-test `step2_split()` + define `step3` skeleton
 
-- [ ] Run `python src/preprocessing/my_preprocess.py` and confirm no exceptions
+- [x] Run `python src/preprocessing/my_preprocess.py` and confirm no exceptions
 - [ ] Confirm `data/splits/train/<Person>/`, `data/splits/val/<Person>/`, `data/splits/test/<Person>/` all exist and contain `.png` files
 - [ ] Confirm file counts roughly match: ~35 train, ~7 val, ~8 test per person
 - [ ] Confirm `data/processed/<Person>/` still has all its files (not emptied by a move)
