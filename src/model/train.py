@@ -41,11 +41,32 @@ def parse_args():
 def make_generators(img_size: int, batch_size: int):
     """Create train / val ImageDataGenerators (augmentation already done offline)."""
     # Minimal online augmentation on top of offline augmented data
+    # train_datagen = ImageDataGenerator(
+    #     rescale=1.0 / 255,
+    #     horizontal_flip=True,
+    #     rotation_range=10,
+    #     brightness_range=[0.85, 1.15],
+    # )
+    # train_datagen = ImageDataGenerator(
+    #     rescale=1.0 / 255,
+    #     rotation_range=15,
+    #     width_shift_range=0.1,
+    #     height_shift_range=0.1,
+    #     zoom_range=0.1,
+    #     horizontal_flip=True
+    # )
+    # train_datagen = ImageDataGenerator(
+    #     rescale=1.0 / 255,
+    #     horizontal_flip=True,
+    # )
     train_datagen = ImageDataGenerator(
         rescale=1.0 / 255,
+        rotation_range=15,
+        width_shift_range=0.1,
+        height_shift_range=0.1,
+        zoom_range=0.1,
         horizontal_flip=True,
-        rotation_range=10,
-        brightness_range=[0.85, 1.15],
+        brightness_range=[0.85, 1.15]
     )
     val_datagen = ImageDataGenerator(rescale=1.0 / 255)
 
