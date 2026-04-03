@@ -41,16 +41,23 @@ def main():
 
     preds = model.predict(img, verbose=0)[0]
 
+    # max_prob = preds.max()
+    # pred_idx = preds.argmax()
+
+    # print(f"[DEBUG] Probabilities: {preds}")
+    # print(f"[DEBUG] Max prob: {max_prob:.3f}")
+
+    # if max_prob >= args.threshold:
+    #     name = label_map[pred_idx]
+    # else:
+    #     name = "Unknown"
+
     max_prob = preds.max()
     pred_idx = preds.argmax()
+    name = label_map[pred_idx]
 
     print(f"[DEBUG] Probabilities: {preds}")
     print(f"[DEBUG] Max prob: {max_prob:.3f}")
-
-    if max_prob >= args.threshold:
-        name = label_map[pred_idx]
-    else:
-        name = "Unknown"
 
     print(f"\n✅ Prediction: {name} ({max_prob:.2f})")
 
