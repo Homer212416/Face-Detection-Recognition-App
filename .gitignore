@@ -8,13 +8,13 @@ dist/
 build/
 
 # Data (large binary files – commit only structure)
-data/raw/
-data/processed/
-data/splits/
+# data/raw/
+# data/processed/
+# data/splits/
 
 # Models
-models/*.keras
-models/*.h5
+# models/*.keras
+# models/*.h5
 
 # Notebooks checkpoints
 notebooks/.ipynb_checkpoints/
