@@ -5,6 +5,31 @@ A real-time face detection and recognition application built from scratch using 
 
 ---
 
+## Quick Start (Run the App)
+
+If a trained model is already provided, you can run the app directly without collecting data or retraining.
+
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Make sure `models/face_recognition_model.keras` and `models/label_map.json` are present.
+
+3. Launch the app:
+   ```bash
+   python src/app/app.py --threshold 0.60 --camera 0
+   ```
+
+**Live controls:**
+| Key | Action |
+|-----|--------|
+| `t` | Raise confidence threshold by 0.05 |
+| `g` | Lower confidence threshold by 0.05 |
+| `q` | Quit |
+
+---
+
 ## Project Structure
 
 ```
@@ -127,6 +152,8 @@ Prints a per-class classification report and saves:
 ---
 
 ### 5. Run the Real-Time Application
+
+> **Skip steps 1–4 if a trained model is already provided.** You only need `models/face_recognition_model.keras` and `models/label_map.json` to run the app.
 
 ```bash
 python src/app/app.py --threshold 0.60 --camera 0
