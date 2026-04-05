@@ -126,13 +126,11 @@ def main():
     face_cascade = cv2.CascadeClassifier(CASCADE_PATH)
 
     # ── Camera ────────────────────────────────────────────────────────────────
-    cap = cv2.VideoCapture(args.camera)
+    cap = cv2.VideoCapture(args.camera, cv2.CAP_V4L2)
+    if not cap.isOpened():
+        cap = cv2.VideoCapture(args.camera)
     if not cap.isOpened():
         sys.exit(f"[ERROR] Cannot open camera {args.camera}")
-
-    # Optionally set resolution
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
     print(f"[INFO] Starting real-time recognition (threshold={threshold:.2f}) …")
     print("[INFO] Press  q  to quit |  t  raise threshold |  g  lower threshold")
