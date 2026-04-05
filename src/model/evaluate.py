@@ -31,7 +31,7 @@ SPLITS_DIR = os.path.join("data", "splits")
 IMG_SIZE = 128
 BATCH_SIZE = 32
 
-
+# Parsing command-line arguments
 def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument(
@@ -44,14 +44,14 @@ def parse_args():
     p.add_argument("--label-map", default=os.path.join(MODELS_DIR, "label_map.json"))
     return p.parse_args()
 
-
+# Read a JSON tag file and convert the keys from strings back to integer indices
 def load_label_map(path: str) -> dict:
     with open(path) as f:
         raw = json.load(f)
     # Keys are stored as strings in JSON; convert to int
     return {int(k): v for k, v in raw.items()}
 
-
+# Create and save a confusion matrix.
 def plot_confusion_matrix(cm, class_names, out_path):
     fig, ax = plt.subplots(figsize=(max(6, len(class_names)), max(5, len(class_names) - 1)))
     sns.heatmap(
@@ -71,7 +71,7 @@ def plot_confusion_matrix(cm, class_names, out_path):
     plt.close()
     print(f"[INFO] Confusion matrix saved → {out_path}")
 
-
+# Plot a graph showing how accuracy and coverage vary with changes in the confidence threshold.
 def threshold_curve(y_true_idx, y_pred_probs, out_path):
     """Plot accuracy vs confidence threshold (shows how many are labelled Unknown)."""
     thresholds = np.linspace(0.0, 0.99, 100)
@@ -79,15 +79,21 @@ def threshold_curve(y_true_idx, y_pred_probs, out_path):
     coverages = []  # fraction of images above threshold
 
     for t in thresholds:
+        # Get the highest predicted probability for each image
         max_probs = y_pred_probs.max(axis=1)
+        # mask is a Boolean array; elements greater than the current threshold `t` are set to `True`
         mask = max_probs >= t
+        # If the current threshold is too high, causing all samples to be rejected
         if mask.sum() == 0:
             accuracies.append(0.0)
             coverages.append(0.0)
             continue
+        # Retrieve the predictions and true labels for those samples that meet the confidence threshold
         preds_above = y_pred_probs[mask].argmax(axis=1)
         true_above = np.array(y_true_idx)[mask]
+        # Calculate the accuracy of the valid sample
         accuracies.append((preds_above == true_above).mean())
+        # Calculate coverage (number of compliant samples / total number of samples)
         coverages.append(mask.mean())
 
     fig, ax1 = plt.subplots(figsize=(8, 4))
@@ -111,6 +117,7 @@ def main():
     print("[INFO] Loading model …")
     model = keras.models.load_model(args.model)
 
+    # Load the tag mapping table and generate a list of category names sorted by index
     label_map = load_label_map(args.label_map)
     class_names = [label_map[i] for i in range(len(label_map))]
 
@@ -131,16 +138,23 @@ def main():
     # ── Metrics without threshold (raw top-1) ────────────────────────────────
     y_pred_idx = y_pred_probs.argmax(axis=1)
     print("\n── Classification Report (no threshold) ──")
+
+    # Print precision, recall, and F1 score
     print(classification_report(y_true_idx, y_pred_idx, target_names=class_names))
 
     # ── Metrics with threshold ────────────────────────────────────────────────
     max_probs = y_pred_probs.max(axis=1)
+    # If the maximum probability reaches the set threshold, retain the prediction; otherwise, mark it as -1 (Unknown)
     y_pred_thresh = np.where(max_probs >= args.threshold, y_pred_idx, -1)
 
     known_mask = y_pred_thresh != -1
+
+    # Count the number of samples that the model failed to recognize (labeled as “Unknown”)
     unknown_count = (~known_mask).sum()
     print(f"\n── Threshold = {args.threshold} ──")
     print(f"  Labelled Unknown : {unknown_count}/{len(y_true_idx)} ({100*unknown_count/len(y_true_idx):.1f}%)")
+    
+    # What is the accuracy rate for the data the model is “confident” about?
     if known_mask.sum() > 0:
         acc_known = (y_pred_thresh[known_mask] == y_true_idx[known_mask]).mean()
         print(f"  Accuracy (known) : {acc_known:.4f}")
