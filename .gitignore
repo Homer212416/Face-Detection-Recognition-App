@@ -31,6 +31,8 @@ notebooks/.ipynb_checkpoints/
 # Project files
 PROJECT_REQUIREMENTS.md
 FinalProject.pdf
+ARCHITECTURE.md
+CLAUDE.md
 
 # LaTeX build artifacts
 *.aux
