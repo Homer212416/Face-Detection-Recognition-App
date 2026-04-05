@@ -20,7 +20,7 @@ SPLITS_DIR = "data/splits"
 
 def step1_crop_all():
     haar_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-    person_folder_names = os.listdir(RAW_DIR)
+    person_folder_names = [p for p in os.listdir(RAW_DIR) if os.path.isdir(os.path.join(RAW_DIR, p))]
     for p in person_folder_names:
         raw_input_path = os.path.join(RAW_DIR, p)
         processed_output_path = os.path.join(PROCESSED_DIR, p)
