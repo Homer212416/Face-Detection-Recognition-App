@@ -28,6 +28,10 @@ notebooks/.ipynb_checkpoints/
 
 #CLAUDE.md
 
+# Project files
+PROJECT_REQUIREMENTS.md
+FinalProject.pdf
+
 # LaTeX build artifacts
 *.aux
 *.log
