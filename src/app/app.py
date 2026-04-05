@@ -160,11 +160,13 @@ def main():
         if n_faces > 0:
             face_tensors = []
             for x, y, w, h in detections:
-                # Clamp ROI to frame bounds
-                x, y = max(0, x), max(0, y)
-                w = min(w, frame.shape[1] - x)
-                h = min(h, frame.shape[0] - y)
-                face_bgr = frame[y: y + h, x: x + w]
+                # Add 20% padding to match preprocess.py crop convention
+                padding = int(0.20 * max(w, h))
+                x1 = max(0, x - padding)
+                y1 = max(0, y - padding)
+                x2 = min(frame.shape[1], x + w + padding)
+                y2 = min(frame.shape[0], y + h + padding)
+                face_bgr = frame[y1:y2, x1:x2]
                 if face_bgr.size == 0:
                     continue
                 face_tensors.append(preprocess_face(face_bgr))
