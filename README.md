@@ -92,12 +92,7 @@ python src/data_collection/capture_images.py --person "Bob"   --count 50
 # … repeat for every person
 ```
 
-**Controls while the capture window is open:**
-| Key | Action |
-|-----|--------|
-| `SPACE` | Capture one frame |
-| `a` | Toggle auto-capture mode |
-| `q` | Quit / finish for this person |
+The script auto-captures one frame every 0.5 seconds. Press `q` to quit once enough images are collected.
 
 Images are saved to `data/raw/<person_name>/`.
 
@@ -113,7 +108,7 @@ python src/preprocessing/preprocess.py
 
 This script:
 1. Detects and crops faces from every raw image (OpenCV Haar cascade).
-2. Resizes crops to 128 × 128 pixels and normalises pixel values.
+2. Resizes crops to 128 × 128 pixels.
 3. Splits into train (70 %) / val (15 %) / test (15 %).
 4. Generates 4× augmented copies for each training image (flips, rotation, brightness/contrast jitter).
 
@@ -188,7 +183,7 @@ Input (128×128×3)
 → [Conv2D(128) → BN → ReLU] × 2 → MaxPool         → 16×16×128
 → [Conv2D(256) → BN → ReLU] × 2
 → GlobalAveragePooling
-→ Dense(256, ReLU) → Dropout(0.4)
+→ Dense(128, ReLU) → Dropout(0.4)
 → Dense(N_classes, Softmax)
 ```
 

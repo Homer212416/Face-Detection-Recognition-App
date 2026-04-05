@@ -67,14 +67,14 @@ Three sequential steps:
 
 **`step3_augment_train()`** — For each original (non-`_aug`) file in `data/splits/train/<Person>/`, generates `AUGMENT_FACTOR=4` variants. Each variant opens the image fresh (prevents transform stacking) and applies: 50% horizontal flip → rotation ±20° → brightness 0.7–1.3× → contrast 0.8–1.2×. Saved as `<stem>_aug{i:02d}.png` alongside the originals.
 
-> **Warning:** Do not re-run without clearing `data/processed/` and `data/splits/` — augmented copies will be re-augmented.
+> **Note:** Re-running `preprocess.py` is safe — it wipes `data/processed/` and `data/splits/` at startup before rebuilding.
 
-**Expected output (50 images/person):**
+**Expected output (100 images/person):**
 ```
-data/processed/<Person>/     → 50 PNGs
-data/splits/train/<Person>/  → 35 originals + 140 _aug = 175 total
-data/splits/val/<Person>/    → ~7 files
-data/splits/test/<Person>/   → ~8 files
+data/processed/<Person>/     → 100 PNGs
+data/splits/train/<Person>/  → 70 originals + 280 _aug = 350 total
+data/splits/val/<Person>/    → 15 files
+data/splits/test/<Person>/   → 15 files
 ```
 
 ---
