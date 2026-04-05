@@ -7,10 +7,8 @@ __pycache__/
 dist/
 build/
 
-# Data (large binary files – commit only structure)
-# data/raw/
-# data/processed/
-# data/splits/
+# Data (large binary files)
+data/
 
 # Models
 # models/*.keras
