@@ -118,7 +118,21 @@ def main():
         sys.exit(f"[ERROR] Label map not found: {args.label_map}")
 
     print("[INFO] Loading model …")
-    model = keras.models.load_model(args.model)
+    # Compatibility shim: older Keras saved renorm* kwargs that current Keras 3 dropped.
+    # Monkey-patch from_config so load_model can deserialise the saved architecture.
+    _orig_bn_from_config = keras.layers.BatchNormalization.from_config.__func__
+
+    @classmethod  # type: ignore[misc]
+    def _bn_from_config_compat(cls, config):
+        for key in ("renorm", "renorm_clipping", "renorm_momentum"):
+            config.pop(key, None)
+        return _orig_bn_from_config(cls, config)
+
+    keras.layers.BatchNormalization.from_config = _bn_from_config_compat
+    try:
+        model = keras.models.load_model(args.model)
+    finally:
+        keras.layers.BatchNormalization.from_config = classmethod(_orig_bn_from_config)
     label_map = load_label_map(args.label_map)
     print(f"[INFO] Classes: {list(label_map.values())}")
 
