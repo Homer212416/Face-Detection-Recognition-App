@@ -26,7 +26,7 @@ def conv_block(x, filters, block_name, dropout_rate=0.2):
     x = layers.BatchNormalization(name=f"{block_name}_bn2")(x)
     x = layers.Activation("relu", name=f"{block_name}_relu2")(x)
 
-    x = layers.MaxPooling2D(2, name=f"{block_name}_pool")(x)
+    x = layers.MaxPooling2D(2, name=f"{block_name}_pool")(x)    # 2*2 Max Pooling: Reduce spatial dimensions by half, while keeping the number of channels unchanged. This helps to reduce computational load and extract more abstract features.
     x = layers.Dropout(dropout_rate, name=f"{block_name}_drop")(x)
     return x
 
