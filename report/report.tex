@@ -58,7 +58,7 @@
 \renewcommand{\headrulewidth}{0.4pt}
 
 % ── Graphics path ─────────────────────────────────────────────────────────────
-\graphicspath{{../models/}}
+\graphicspath{{../models/}{./}}
 
 % ─────────────────────────────────────────────────────────────────────────────
 \begin{document}
@@ -429,6 +429,26 @@ The real-time application (\texttt{app.py}) processes each webcam frame as follo
 \end{table}
 
 The application runs in real time on CPU. The Haar cascade detector operates in milliseconds per frame, and batch inference over the typically small number of detected faces adds minimal latency.
+
+\subsection{Live Recognition Demo}
+
+The figures below show the application running on each team member.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Screenshot_280.png}
+    \caption{Booth recognised at 100\% confidence.}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{"Screen Shot 2026-04-09 at 22.08.11.png"}
+    \caption{Yikai recognised at 97\% confidence.}
+  \end{subfigure}
+  \caption{Live recognition results: green bounding box with name and softmax confidence displayed above each detected face. HUD (top-left) shows the active threshold, face count, and FPS.}
+\end{figure}
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Limitations and Future Work}
